@@ -1,0 +1,19 @@
+body {
+  display: grid;
+  height: 100vh;
+  grid-template-rows: auto 1fr auto;
+}
+
+main {
+  background: #efe6d5;
+}
+
+footer {
+  background: #e73213;
+  padding: 2rem;
+  text-align: center;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+}
