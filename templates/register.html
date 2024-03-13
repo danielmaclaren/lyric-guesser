@@ -6,6 +6,20 @@
 
 {% block main %}
     <form action="/register" method="post">
-
+        <div class="py-1 text-center">
+            <label for="Username">Email address</label>
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="Enter email" type="text">
+        </div>
+        <div class="py-1 text-center">
+            <label for="Password">Password</label>
+            <input class="form-control mx-auto w-auto" name="password" placeholder="Enter password" type="password">
+        </div>
+        <div class="py-1 text-center">
+            <label for="Confirmation">Confirmation</label>
+            <input class="form-control mx-auto w-auto" name="confirmation" placeholder="Confirm Password" type="password">
+        </div>
+        <div class="py-3 text-center">
+            <button class="btn btn-primary" type="submit">Register</button>
+        </div>
     </form>
 {% endblock %}
