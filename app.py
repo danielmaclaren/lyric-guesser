@@ -3,8 +3,11 @@ from helpers import login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 import sqlite3
 
-db = sqlite3.connect('workout.db')
-
+db = sqlite3.connect('workout.db',  check_same_thread=False)
+db.execute("""CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    username TEXT NOT NULL,
+    hash TEXT NOT NULL)""")
 
 app = Flask(__name__)
 
@@ -17,7 +20,7 @@ def home():
 def login():
     return render_template("login.html")
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
     if request.method == "POST":
