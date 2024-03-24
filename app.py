@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect
 from helpers import login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 import sqlite3
@@ -35,7 +35,7 @@ def register():
             return apology("passwords must match", 400)
 
         rows = db.execute(
-            "SELECT * FROM users WHERE username = ?", request.form.get("username")
+            "SELECT * FROM users WHERE username = ?", (request.form.get("username"),)
         )
 
         if len(rows) >= 1:
