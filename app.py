@@ -1,16 +1,32 @@
-from flask import Flask, render_template, request, session, redirect
-from helpers import login_required
-from werkzeug.security import check_password_hash, generate_password_hash
 import sqlite3
 
-db = sqlite3.connect('workout.db',  check_same_thread=False)
+from flask import Flask, render_template, request, session, redirect
+from flask_session import Session
+from helpers import login_required, apology
+from werkzeug.security import check_password_hash, generate_password_hash
+
+app = Flask(__name__)
+
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
+conn = sqlite3.connect('workout.db',  check_same_thread=False)
+db = conn.cursor()
 db.execute("""CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     username TEXT NOT NULL,
     hash TEXT NOT NULL)""")
 
-app = Flask(__name__)
+conn.commit()
 
+@app.after_request
+def after_request(response):
+    """Ensure responses aren't cached"""
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
 
 @app.route("/")
 def home():
@@ -34,11 +50,15 @@ def register():
         elif request.form.get("password") != request.form.get("confirmation"):
             return apology("passwords must match", 400)
 
+        # if username is already taken
         rows = db.execute(
             "SELECT * FROM users WHERE username = ?", (request.form.get("username"),)
         )
+        conn.commit()
 
-        if len(rows) >= 1:
+        data = rows.fetchall()
+        
+        if data:
             return apology(
                 "username is already taken, please use another username", 400
             )
@@ -47,11 +67,13 @@ def register():
 
             new_user = db.execute(
                 "INSERT INTO users (username, hash) VALUES (?, ?)",
-                request.form.get("username"),
-                hash_password
+                (request.form.get("username"),
+                hash_password,)
             )
+            conn.commit()
 
-        session["user_id"] = new_user
+
+        """session["user_id"] = new_user"""
 
         return redirect("/")
 
