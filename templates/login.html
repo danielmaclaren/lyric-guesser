@@ -7,12 +7,12 @@
 {% block main %}
     <form action="/login" method="post">
         <div class="py-1 text-center">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control mx-auto w-auto" id="username" aria-describedby="emailHelp">
+            <label for="username">Username</label>
+            <input type="text" class="form-control mx-auto w-auto" name="username" aria-describedby="emailHelp">
         </div>
         <div class="py-1 text-center">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control mx-auto w-auto" id="password">
+            <label for="password">Password</label>
+            <input type="password" class="form-control mx-auto w-auto" name="password">
         </div>
         <div class="py-3 text-center">
             <button type="submit" class="btn btn-primary">Submit</button>

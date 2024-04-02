@@ -29,12 +29,40 @@ def after_request(response):
     return response
 
 @app.route("/")
-def home():
+def index():
     return render_template("index.html")
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+
+    session.clear()
+
+    if request.method == "POST":
+
+        if not request.form.get("username"):
+            return apology("must provide username", 400)
+        
+        elif not request.form.get("password"):
+            return apology("must provide password", 400)
+        
+        rows = db.execute(
+            "SELECT * FROM users WHERE username = ?", (request.form.get("username"),)
+        )
+        conn.commit()
+
+        data = rows.fetchall()
+
+        if len(data) != 1 or not check_password_hash(
+            data[0][2], request.form.get("password")
+        ):
+            return apology("Invalid username and/or password", 400)
+        
+        #session["user_id"] = rows[0]["id"]
+
+        return redirect("/")
+    
+    elif request.method == "GET":
+        return render_template("login.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
