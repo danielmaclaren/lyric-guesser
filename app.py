@@ -124,7 +124,14 @@ def aboutme():
 @app.route("/training")
 @login_required
 def training():
-    return render_template("training.html")
+
+    if request.method == "POST":
+    
+        return redirect("/")
+
+    else:
+    
+        return render_template("training.html")
 
 @app.route("/history")
 @login_required

@@ -6,6 +6,29 @@
 
 {% block main %}
     <form action="/training" method="post">
-
+        <div class="container">
+            <h2>*Title of the exercise</h2>
+            <p>*Description of the day</p>            
+            <table id="settable" class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Set</th>
+                  <th>Weight</th>
+                  <th>Reps</th>
+                </tr>
+              </thead>
+              <tbody id="setrow">
+                
+              </tbody> 
+              <tfooter>
+                <tr>
+                    <td></td>
+                    <td><input type="text" name="weight" id="weight"></td>
+                    <td><input type="text" name="reps" id="reps"></td>
+                    <td><input type="button" value="Add Set" + onclick="addSet()" id="addset"></td>
+                </tr>
+              </tfooter>
+            </table>
+          </div>
     </form>
 {% endblock %}
