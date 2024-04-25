@@ -1,35 +1,41 @@
 let exercisecount = 1;
-let set = { value: 1 };
-let table = { value: 0};
+let currentset = { value: 1 };
+let currenttable = { value: 0};
 let dict = {};
 
 
 function addSet(tablenumber) {
-    if (table.value != tablenumber) {
+    if (currenttable.value != tablenumber) {
         if (dict[tablenumber] == undefined) {
-            set.value = 1;
-            table.value = tablenumber;
-            dict[tablenumber] = set.value;
+            currentset.value = 1;
+            currenttable.value = tablenumber;
+            dict[tablenumber] = currentset.value;
         } else {
-            set.value = dict[tablenumber];
+            currentset.value = dict[tablenumber];
         }
     } else {
-        set.value = dict[tablenumber];
+        currentset.value = dict[tablenumber];
     }
     
-    
-
     let weight = document.getElementById("weight"+ tablenumber).value;
     let reps = document.getElementById("reps" + tablenumber).value;
-
+    
     document.getElementById("setrow" + tablenumber).innerHTML += `
-                <tr>
-                    <td id="set${set.value}">${set.value}</td>
+                <tr id="exerciserow${tablenumber}${currentset.value}">
+                    <td id="set${currentset.value}">${currentset.value}</td>
                     <td>${weight}</td>
                     <td>${reps}</td>
+                    <td><input type="button" value="Remove Set" + onclick="removeSet(${tablenumber}${currentset.value}, ${tablenumber})" id="removeset${tablenumber}${currentset.value}"></td>
                 </tr> `;
-    set.value++;
-    dict[tablenumber] = set.value;
+                
+    currentset.value++;
+    dict[tablenumber] = currentset.value;
+}
+
+function removeSet(tablenumber, updatecurrentset) {
+    document.getElementById("exerciserow" + tablenumber).remove();
+    currentset.value--;
+    dict[updatecurrentset] = currentset.value;
 }
 
 function addExercise() {
