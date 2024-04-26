@@ -39,11 +39,14 @@ function removeSet(tablenumber, updatecurrentset) {
 }
 
 function addExercise() {
+
+    let exercisetitle = document.getElementById("exercisetitle").value;
+
     document.getElementById("settable").innerHTML += `
     <table id="setexercise${exercisecount}" class="table table-hover">
         <thead>
-            <input type="hidden" name="exercisenumber" id="exercisenumber" value="${exercisecount}">
-            <h2>*Exercise*</h2>
+            <input type="hidden" name="exercisenumber${exercisecount}" id="exercisenumber${exercisecount}" value="${exercisecount}">
+            <h3>${exercisetitle}</h3>
             <tr>
                 <th>Set</th>
                 <th>Weight</th>
@@ -63,4 +66,9 @@ function addExercise() {
     </table>
     `;
     exercisecount ++;
+}
+
+function clearText() {
+    let exercisetitle = document.getElementById("exercisetitle");
+    exercisetitle.value = '';
 }

@@ -18,3 +18,8 @@ footer {
 body {
   font-family: system-ui, sans-serif;
 }
+
+input[id="workout"], input[id="exercisetitle"], textarea {
+  background: #efe6d5;
+  font-weight: bold;
+}

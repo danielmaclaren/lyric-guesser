@@ -7,17 +7,22 @@
 {% block main %}
     <form action="/training" method="post">
       <div id="programinfomation">
-        <h2>*Program Title - Day*</h2>
-        <p>*Description of the day*</p>
+        <h2><input class="form-control form-control-lg" type="text" name="workout" id="workout" placeholder="Workout Title"></h2>
       </div>  
       <div class="container" id="settable">           
       </div>
       <div id="addexercisebutton">
         <table>
           <tr>
-            <input type="button" value="Add Exercise" + onclick="addExercise()" id="addexercise">
+            <td><input class="form-control form-control-sm" type="text" name="exercisetitle" id="exercisetitle"></td>
+            <td><input type="button" value="Add Exercise" + onclick="addExercise();clearText();" id="addexercise"></td>
           </tr>
-        </table> 
+        </table>
+        <table>
+          <tr>
+            <input class="btn-block" type="button" value="Save Workout" + onclick="" id="addexercise">
+          </tr>
+        </table>
       </div>
     </form>
 {% endblock %}
