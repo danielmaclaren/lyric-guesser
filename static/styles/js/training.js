@@ -25,7 +25,7 @@ function addSet(tablenumber) {
                     <td id="set${currentset.value}">${currentset.value}</td>
                     <td>${weight}</td>
                     <td>${reps}</td>
-                    <td><input type="button" value="Remove Set" + onclick="removeSet(${tablenumber}${currentset.value}, ${tablenumber})" id="removeset${tablenumber}${currentset.value}"></td>
+                    <td><input class="btn btn-primary btn-sm" type="button" value="Remove Set" + onclick="removeSet(${tablenumber}${currentset.value}, ${tablenumber})" id="removeset${tablenumber}${currentset.value}"></td>
                 </tr> `;
                 
     currentset.value++;
@@ -60,7 +60,7 @@ function addExercise() {
                 <td></td>
                 <td><input type="text" name="weight" id="weight${exercisecount}"></td>
                 <td><input type="text" name="reps" id="reps${exercisecount}"></td>
-                <td><input type="button" value="Add Set" + onclick="addSet(${exercisecount})" id="addset${exercisecount}"></td>
+                <td><input class="btn btn-primary btn-sm" type="button" value="Add Set" + onclick="addSet(${exercisecount})" id="addset${exercisecount}"></td>
             </tr>
         </tfooter>
     </table>
@@ -71,4 +71,16 @@ function addExercise() {
 function clearText() {
     let exercisetitle = document.getElementById("exercisetitle");
     exercisetitle.value = '';
+}
+
+function addExerciseClicked() {
+    fetch('/addexerciseclick', {
+        method: 'POST',
+    });
+}
+
+function addSetClicked() {
+    fetch('/addsetclick', {
+        method: 'POST',
+    });
 }

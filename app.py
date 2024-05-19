@@ -13,12 +13,36 @@ Session(app)
 
 conn = sqlite3.connect('workout.db',  check_same_thread=False)
 db = conn.cursor()
-db.execute("""CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    username TEXT NOT NULL,
-    hash TEXT NOT NULL)""")
+db.execute("""CREATE TABLE IF NOT EXISTS Users (
+        UserID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        Username TEXT NOT NULL,
+        Hash TEXT NOT NULL)""")
+
+db.execute("""CREATE TABLE IF NOT EXISTS Workouts (
+        WorkoutID INTEGER PRIMARY KEY AUTOINCREMENT,
+        UserID INT,
+        WorkoutDate DATE NOT NULL,
+        CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (UserID) REFERENCES Users(UserID))""")
+
+db.execute("""CREATE TABLE IF NOT EXISTS Exercises (
+        ExerciseID INTEGER PRIMARY KEY AUTOINCREMENT,
+        Name VARCHAR(50),
+        CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP)""")
+
+db.execute("""CREATE TABLE IF NOT EXISTS WorkoutExercises (
+        WorkoutExercise INTEGER PRIMARY KEY AUTOINCREMENT,
+        WorkoutID INT,
+        ExerciseID INT,
+        Sets INT,
+        Reps INT,
+        Weight DECIMAL(5,2),
+        FOREIGN KEY (WorkoutID) REFERENCES Workouts(WorkoutID),
+        FOREIGN KEY (ExerciseID) REFERENCES Exercsises(ExerciseID))""")
 
 conn.commit()
+
+exercise_button_clicks = 0
 
 @app.after_request
 def after_request(response):
@@ -48,7 +72,7 @@ def login():
             return apology("must provide password", 400)
         
         rows = db.execute(
-            "SELECT * FROM users WHERE username = ?", (request.form.get("username"),)
+            "SELECT * FROM Users WHERE Username = ?", (request.form.get("username"),)
         )
         conn.commit()
 
@@ -87,7 +111,7 @@ def register():
             return apology("passwords must match", 400)
 
         rows = db.execute(
-            "SELECT * FROM users WHERE username = ?", (request.form.get("username"),)
+            "SELECT * FROM Users WHERE Username = ?", (request.form.get("username"),)
         )
 
         data = rows.fetchall()
@@ -100,7 +124,7 @@ def register():
             hash_password = generate_password_hash(request.form.get("password"))
 
             new_user = db.execute(
-                "INSERT INTO users (username, hash) VALUES (?, ?)",
+                "INSERT INTO Users (Username, Hash) VALUES (?, ?)",
                 (request.form.get("username"),
                 hash_password,)
             )
@@ -126,12 +150,17 @@ def aboutme():
 def training():
 
     if request.method == "POST":
-    
+
+
         return redirect("/")
 
     else:
     
         return render_template("training.html")
+
+@app.route('/add_exercise_click', methods=['POST'])
+def addexerciseclick():
+    return
 
 @app.route("/history")
 @login_required
