@@ -1,6 +1,6 @@
 import sqlite3
 
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, jsonify
 from flask_session import Session
 from helpers import login_required, apology
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -13,6 +13,7 @@ Session(app)
 
 conn = sqlite3.connect('workout.db',  check_same_thread=False)
 db = conn.cursor()
+
 db.execute("""CREATE TABLE IF NOT EXISTS Users (
         UserID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         Username TEXT NOT NULL,
@@ -151,15 +152,42 @@ def training():
 
     if request.method == "POST":
 
-
         return redirect("/")
 
     else:
     
         return render_template("training.html")
 
-@app.route('/add_exercise_click', methods=['POST'])
+@app.route('/addexerciseclick', methods=['POST'])
 def addexerciseclick():
+    if request.method == "POST":
+        data = request.get_json()
+        exercisetitle = data.get("exercisetitle")
+        print(exercisetitle)
+        if not exercisetitle:
+            return jsonify({"message": "Exercise title is required"}), 400
+
+        rows = db.execute(
+            "SELECT ExerciseID FROM Exercises WHERE Name = ?", (exercisetitle,)
+        )
+
+        data = rows.fetchall()
+
+        if not data:
+            db.execute(
+                "INSERT INTO Exercises (Name) VALUES (?)", (exercisetitle,)
+            )
+            conn.commit()
+            return jsonify({"message": "Exercise was added successfully"}), 201
+        else:
+            return jsonify({"message": "Exercise already exists"}), 200
+
+
+@app.route('/addsetclick', methods=['POST'])
+def addsetclick():
+
+
+    
     return
 
 @app.route("/history")

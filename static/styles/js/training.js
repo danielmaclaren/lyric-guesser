@@ -74,8 +74,21 @@ function clearText() {
 }
 
 function addExerciseClicked() {
+    let exercisetitle = document.getElementById("exercisetitle").value;
+
     fetch('/addexerciseclick', {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ exercisetitle: exercisetitle })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.message);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
     });
 }
 
