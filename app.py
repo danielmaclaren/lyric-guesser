@@ -36,10 +36,10 @@ db.execute("""CREATE TABLE IF NOT EXISTS WorkoutExercises (
         WorkoutID INT,
         ExerciseID INT,
         Sets INT,
-        Reps INT,
         Weight DECIMAL(5,2),
+        Reps INT,
         FOREIGN KEY (WorkoutID) REFERENCES Workouts(WorkoutID),
-        FOREIGN KEY (ExerciseID) REFERENCES Exercsises(ExerciseID))""")
+        FOREIGN KEY (ExerciseID) REFERENCES Exercises(ExerciseID));""")
 
 conn.commit()
 
@@ -163,7 +163,6 @@ def addexerciseclick():
     if request.method == "POST":
         data = request.get_json()
         exercisetitle = data.get("exercisetitle")
-        print(exercisetitle)
         if not exercisetitle:
             return jsonify({"message": "Exercise title is required"}), 400
 
@@ -185,10 +184,22 @@ def addexerciseclick():
 
 @app.route('/addsetclick', methods=['POST'])
 def addsetclick():
+    if request.method == "POST":
+        data = request.get_json()
+        workoutobj = data.get("workoutObj")
+        print(workoutobj)
+        if not workoutobj:
+            return jsonify({"message": "Invalid data"}), 400
 
+        weight = workoutobj.get("weight")
+        reps = workoutobj.get("reps")
 
-    
-    return
+        db.execute(
+            "INSERT INTO WorkoutExercises (Weight, Reps) VALUES (?, ?)", (weight, reps,)
+        )
+        conn.commit()
+        return jsonify({"message": "Data inserted successfully"}), 201
+
 
 @app.route("/history")
 @login_required
