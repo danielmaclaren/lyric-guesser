@@ -1,4 +1,5 @@
 import sqlite3
+import datetime
 
 from flask import Flask, render_template, request, session, redirect, jsonify
 from flask_session import Session
@@ -155,7 +156,16 @@ def training():
         return redirect("/")
 
     else:
-    
+        workout_date = datetime.datetime.now()
+        user_id = session["user_id"]
+
+        db.execute(
+            "INSERT INTO Workouts (UserID, WorkoutDate) VALUES (?, ?)", (user_id, workout_date)
+            )
+        
+        workout_id = db.lastrowid
+        session["workout_id"] = workout_id
+
         return render_template("training.html")
 
 @app.route('/addexerciseclick', methods=['POST'])
@@ -177,8 +187,12 @@ def addexerciseclick():
                 "INSERT INTO Exercises (Name) VALUES (?)", (exercisetitle,)
             )
             conn.commit()
+            exercise_id = db.lastrowid
+            session["exercise_id"] = exercise_id
             return jsonify({"message": "Exercise was added successfully"}), 201
         else:
+            exercise_id = data[0][0]
+            session["exercise_id"] = exercise_id
             return jsonify({"message": "Exercise already exists"}), 200
 
 
@@ -187,15 +201,17 @@ def addsetclick():
     if request.method == "POST":
         data = request.get_json()
         workoutobj = data.get("workoutObj")
-        print(workoutobj)
+
         if not workoutobj:
             return jsonify({"message": "Invalid data"}), 400
 
+        workout_id = session.get("workout_id")
+        exercise_id = session.get("exercise_id")
         weight = workoutobj.get("weight")
         reps = workoutobj.get("reps")
 
         db.execute(
-            "INSERT INTO WorkoutExercises (Weight, Reps) VALUES (?, ?)", (weight, reps,)
+            "INSERT INTO WorkoutExercises (WorkoutID, ExerciseID, Weight, Reps) VALUES (?, ?, ?, ?)", (workout_id, exercise_id, weight, reps,)
         )
         conn.commit()
         return jsonify({"message": "Data inserted successfully"}), 201
